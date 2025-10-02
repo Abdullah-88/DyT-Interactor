@@ -49,12 +49,12 @@ class MemoryUnit(nn.Module):
     	
 
 class InteractionUnit(nn.Module):
-    def __init__(self,dim,score_dim):
+    def __init__(self,dim,num_tokens):
         super().__init__()
         
              
         self.dyt_token = DynamicTanh(dim) 
-        self.dyt_context = GlobalDynamicTanh(dim,score_dim)    
+        self.dyt_context = GlobalDynamicTanh(dim,num_tokens)    
        
              	   
     def forward(self, x):
