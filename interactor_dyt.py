@@ -27,7 +27,7 @@ class GlobalDynamicTanh(nn.Module):
         x = torch.tanh(self.alpha * x)
         return x 
 
-class MemoryUnit(nn.Module):
+class MappingUnit(nn.Module):
     def __init__(self,dim):
         super().__init__()
         
@@ -79,7 +79,7 @@ class InteractorBlock(nn.Module):
         super().__init__()
        
          
-        self.memory = MemoryUnit(d_model)
+        self.mapping = MappingUnit(d_model)
         self.interaction = InteractionUnit(d_model,num_tokens)
         
     def forward(self, x):
@@ -92,7 +92,7 @@ class InteractorBlock(nn.Module):
         
         residual = x
         
-        x = self.memory(x)
+        x = self.mapping(x)
         
                                           
         out = x + residual
