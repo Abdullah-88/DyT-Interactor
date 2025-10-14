@@ -33,7 +33,7 @@ class MappingUnit(nn.Module):
         
            
         self.dyt_token = DynamicTanh(dim)
-        self.p =  nn.Linear(dim,dim)
+        self.p =  nn.Linear(dim,dim,bias = False)
       
              	   
     def forward(self, x):
