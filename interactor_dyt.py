@@ -33,19 +33,23 @@ class MappingUnit(nn.Module):
         
            
         self.dyt_token = DynamicTanh(dim)
-        self.p =  nn.Linear(dim,dim,bias = False)
-      
+        self.gelu = nn.GELU()
+        self.proj_1 =  nn.Linear(dim,dim,bias = False)
+        self.proj_2 =  nn.Linear(dim,dim,bias = False)
+        self.proj_3 = nn.Linear(dim,dim,bias = False)
              	   
     def forward(self, x):
     
     	x = self.dyt_token(x)    	
     	u, v = x, x 
-    	u = self.p(u)
-    	   	
+    	u = self.proj_1(u)
+    	u = self.gelu(u)
+    	v = self.proj_2(v)
     	g = u * v
+    	x = self.proj_3(g)
     	
-    	   	  
-    	return g
+    	
+    	return x
     	
 
 class InteractionUnit(nn.Module):
