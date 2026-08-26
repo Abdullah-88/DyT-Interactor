@@ -2,7 +2,7 @@ import torch
 from torch import nn
 
 class DynamicTanh(nn.Module):
-    def __init__(self, normalized_shape, alpha_init_value=0.5):
+    def __init__(self, normalized_shape, alpha_init_value = 0.5):
     
         super().__init__()
         self.normalized_shape = normalized_shape
@@ -14,7 +14,7 @@ class DynamicTanh(nn.Module):
         return x
        
 class GlobalDynamicTanh(nn.Module):
-    def __init__(self, normalized_shape,sequence_length, alpha_init_value=0.5):
+    def __init__(self, normalized_shape, sequence_length, alpha_init_value = 0.5):
     
         super().__init__()
         self.normalized_shape = normalized_shape
@@ -60,11 +60,11 @@ class InteractionUnit(nn.Module):
     	dim0 = x.shape[0]
     	dim1 = x.shape[1]
     	dim2 = x.shape[2]
-    	x = x.reshape([dim0,dim1*dim2])
+    	x = x.reshape([dim0, dim1 * dim2])
     	
     	x = self.dyt_context(x)
     	
-    	x = x.reshape([dim0,dim1,dim2])
+    	x = x.reshape([dim0, dim1, dim2])
     	    	
     	return x
     	
@@ -101,5 +101,4 @@ class ContextDyT(nn.Module):
 
     def forward(self, x):
        
-        return self.model(x)
-        
+        return self.model(x)        
