@@ -15,23 +15,23 @@ Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 training_data = datasets.CIFAR10(
-                                       root='data',
-                                       train=True,
-                                       download=True,
-                                       transform=transform 
+                                       root = 'data',
+                                       train = True,
+                                       download = True,
+                                       transform = transform 
                                        )
 
 test_data = datasets.CIFAR10(
-                                       root='data',
-                                       train=False,
-                                       download=True,
-                                       transform=transform 
+                                       root = 'data',
+                                       train = False,
+                                       download = True,
+                                       transform = transform 
                                        )                                       
                                       
 batch_size = 128
 
-train_dataloader = DataLoader(training_data, batch_size=batch_size,shuffle=True)
-test_dataloader = DataLoader(test_data, batch_size=batch_size)
+train_dataloader = DataLoader(training_data, batch_size = batch_size, shuffle = True)
+test_dataloader = DataLoader(test_data, batch_size = batch_size)
 
 for X, y in test_dataloader:
     print(f"Shape of X [N,C,H,W]:{X.shape}")
@@ -45,19 +45,18 @@ print(f"using {device} device")
 class ContextDyTImageClassification(ContextDyT):
     def __init__(
         self,
-        image_size=32,
-        patch_size=4,
-        in_channels=3,
-        num_classes=10,     
+        image_size = 32,
+        patch_size = 4,
+        in_channels = 3,
+        num_classes = 10,     
         d_model = 256,
         d_ffn = 512,
         num_tokens = 64,
-        num_layers=4,
-               
+        num_layers = 4        
     ):
         super().__init__(d_model, d_ffn, num_tokens, num_layers)
         self.patcher = nn.Conv2d(
-            in_channels, d_model, kernel_size=patch_size, stride=patch_size
+            in_channels, d_model, kernel_size = patch_size, stride = patch_size
         )
         self.classifier = nn.Linear(d_model, num_classes)
 
@@ -68,7 +67,7 @@ class ContextDyTImageClassification(ContextDyT):
         patches = patches.permute(0, 2, 3, 1)
         patches = patches.view(batch_size, -1, num_channels)
         embedding = self.model(patches)
-        embedding = embedding.mean(dim=1) 
+        embedding = embedding.mean(dim = 1) 
         out = self.classifier(embedding)
         return out
 
@@ -76,7 +75,7 @@ model = ContextDyTImageClassification().to(device)
 print(model)
 
 loss_fn = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(),lr=1e-3)
+optimizer = torch.optim.Adam(model.parameters(), lr = 1e-3)
 
 def train(dataloader, model, loss_fn, optimizer):
     size = len(dataloader.dataset)
@@ -88,7 +87,7 @@ def train(dataloader, model, loss_fn, optimizer):
         X, y = X.to(device), y.to(device)
               
         pred = model(X)
-        loss = loss_fn(pred,y)
+        loss = loss_fn(pred, y)
                
         optimizer.zero_grad()
         loss.backward()
@@ -103,8 +102,8 @@ def train(dataloader, model, loss_fn, optimizer):
 
     train_loss /= num_batches
     train_accuracy = 100. * correct.item() / size
-    print(f"Train Metric: \n Accuracy: {(100*correct):>0.1f}% \n")
-    return train_loss,train_accuracy 
+    print(f"Train Metric: \n Accuracy: {(100 * correct):>0.1f}% \n")
+    return train_loss, train_accuracy 
 
 def test(dataloader, model, loss_fn):
     size = len(dataloader.dataset)            
@@ -120,8 +119,8 @@ def test(dataloader, model, loss_fn):
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
     test_loss /= num_batches
     correct /= size
-    print(f"Test Metrics: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")  
-    test_accuracy = 100*correct      
+    print(f"Test Metrics: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")  
+    test_accuracy = 100 * correct      
     return test_loss, test_accuracy
 
 logname = "/PATH/Context_DyT/Experiments_cifar10/logs_contextdyt/logs_cifar10.csv"
